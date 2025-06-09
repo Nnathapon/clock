@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clock in different bases</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: monospace, Arial, sans-serif;
+            text-align: left;
+            padding: 2px;
+        }
+        .time-box {
+            margin: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-content: end;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .clock-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        svg {
+            width: 90vmin;
+            height: 90vmin;
+        }
+
+        .clock-face {
+            fill: #000;
+            stroke: #ffffff;
+            stroke-width: 1px;
+        }
+
+        .hand {
+            stroke: #fff;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handd {
+            stroke: #f88;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handd2 {
+            stroke: #f44;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handd3 {
+            stroke: #f00;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handd4 {
+            stroke: #d00;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        
+        .handh {
+            stroke: #0f0;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handh2 {
+            stroke: #0c0;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handh3 {
+            stroke: #090;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        
+        .hande {
+            stroke: #c60;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .hande2 {
+            stroke: #840;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handx {
+            stroke: #c0c;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+        .handx2 {
+            stroke: #808;
+            stroke-width: 0.5;
+            stroke-linecap: round;
+        }
+
+        .center-dot {
+            fill: #ffffff;
+        }
+
+        .fraction-tick {
+            stroke: #aaaaaa;
+            stroke-width: 0.2;
+        }
+
+        .fraction-label {
+            font-size: 2px;
+            fill: #ffffff;
+            font-family: monospace, sans-serif;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-left: 10px;
+            border: 1px solid #000; /* Optional border */
+        }
+        .flex-container {
+            display: flex;
+            justify-content: left; /* Distributes items to the left and right */
+            align-items: center; /* Aligns items vertically (optional) */
+            padding: 0px;
+        }
+    </style>
+</head>
+<body class="flex-container">   
+    <div class="time-box">
+        <div id="isoTime"></div>
+        <p><strong>Bin:</strong> <span id="binary"></span><br>
+        <strong>Oct:</strong> <span id="octal"></span><br>
+        <strong>Base64:</strong> <span id="base64"></span></p>
+        <span class="flex-container">
+            <strong>Hex:</strong> <span id="hexadecimal"></span>
+            <div id="cbox" class="color-box"></div>
+        </span><br>
+        
+        
+        <span class="flex-container">
+        <p><strong>Dec:</strong> <span id="decimal"></span><div id="dbox" class="color-box"></div></p>
+        </span>
+        <p><strong>Base 6:</strong><span id="base6"></span><br>
+        <strong>Base36:</strong> <span id="base36"></span><br>
+        <strong>Dozenal:</strong> <span id="dozenal"></span></p>
+        <p><strong>Base26:</strong> <span id="base26"></span><span id="flagemoji"></span><br>
+        <strong>Base44:</strong> <span id="base44"></span><br>
+        <strong>Base60:</strong> <span id="base60"></span><br>
+        <strong>Base69:</strong> <span id="base69"></span></p>
+        <strong>Base118:</strong> <span id="baseP"></span></p>
+    </div>
+    <div class="clock-container">
+        <svg viewBox="-60 -60 120 120">
+            <circle class="clock-face" cx="0" cy="0" r="48" />
+            <g id="fraction-ticks"></g>
+            <g id="fraction-labels"></g>
+            <g id="uniform-labels"></g>            
+            <line class="handd" x1="0" y1="0" x2="0" y2="-8" transform="rotate(0)" />
+            <line class="handh" x1="0" y1="0" x2="0" y2="-22" transform="rotate(0)" />
+            <line class="handh2" x1="0" y1="0" x2="0" y2="-25" transform="rotate(0)" />
+            <line class="handh3" x1="0" y1="0" x2="0" y2="-28" transform="rotate(0)" />
+            <line class="handd2" x1="0" y1="0" x2="0" y2="-10" transform="rotate(0)" />
+            <line class="handd3" x1="0" y1="0" x2="0" y2="-12" transform="rotate(0)" />
+            <line class="handd4" x1="0" y1="0" x2="0" y2="-15" transform="rotate(0)" />
+            <line class="hand" x1="0" y1="0" x2="0" y2="-43" transform="rotate(0)" />
+            <line class="hande" x1="0" y1="0" x2="0" y2="-45" transform="rotate(0)" />
+            <line class="hande2" x1="0" y1="0" x2="0" y2="-47" transform="rotate(0)" />
+            <line class="handx" x1="0" y1="0" x2="0" y2="-38" transform="rotate(0)" />
+            <line class="handx2" x1="0" y1="0" x2="0" y2="-40" transform="rotate(0)" />
+            <line class="handi" x1="0" y1="0" x2="0" y2="-20" transform="rotate(0)" />
+            <circle class="center-dot" cx="0" cy="0" r="1.5" />
+        </svg>
+    </div>
+
+    <script>
+        function updateIsoTime() {
+            const now = new Date();
+            const isoTime = now.toLocaleString('th-TH'); // Remove milliseconds
+            const localTime = isoTime.replace('T', ' '); // Replace 'T' with space and add offset
+            document.getElementById('isoTime').textContent = localTime;
+        }
+
+        setInterval(updateIsoTime, );
+        updateIsoTime();
+
+        const TOTAL_MS_IN_DAY = 24 * 60 * 60 * 1000;
+        function getFractionOfDay() {
+            const now = new Date();
+            const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const elapsedMilliseconds = now - startOfDay;
+            const totalMilliseconds = 24 * 60 * 60 * 1000;
+            return elapsedMilliseconds / totalMilliseconds;
+        }
+        function convertFractionToBase(fraction, base, precision = 10) {
+            const digits = base === 2 ? ".|" :(base===26?"ABCDEFGHIJKLMNOPQRSTUVWXYZ":base===44?"กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ":base==64? "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/":"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            let result = "";
+            let fractionalPart = fraction;
+
+            for (let i = 0; i < precision; i++) {
+                fractionalPart *= base;
+                const digit = Math.floor(fractionalPart);
+                if (base >50&&base!=64) {
+                    result += digit.toString().padStart(2, '0') + (i < precision - 1 ? ":" : "");
+                } else {result += digits[digit];}
+                fractionalPart -= digit;
+            }
+            return result;
+        }
+        function textToFlagEmoji(text) {
+            return text
+                .toUpperCase() // Convert to uppercase
+                .replace(/[^A-Z]/g, '') // Remove non-alphabetic characters
+                .match(/.{1,2}/g) // Split into two-character chunks
+                ?.map(pair => {
+                    return pair
+                        .split('') // Split into individual characters
+                        .map(char => String.fromCodePoint(127397 + char.charCodeAt(0))) // Convert to regional indicator
+                        .join(''); // Combine into a flag emoji
+                })
+                .join('') || ''; // Combine all flag emojis, handle empty input
+        }
+        function unicodeToChar(unicodeStr) {
+            const hexCode = parseInt(unicodeStr.slice(0,4),16);
+            const p1 = hexCode/0x400+0xD800;
+            const p2 = hexCode%0x400+0xDC00;
+            
+            return " "+String.fromCharCode(hexCode)+String.fromCharCode(p1)+String.fromCharCode(p2);
+        }
+
+
+        // Function to update the time in different bases
+        function updateTime() {
+            const fractionOfDay = getFractionOfDay();
+
+            document.getElementById("binary").textContent = convertFractionToBase(fractionOfDay, 2, 18);
+            document.getElementById("octal").textContent = convertFractionToBase(fractionOfDay, 8, 6);
+            let hx=convertFractionToBase(fractionOfDay, 16, 6);
+            document.getElementById("hexadecimal").textContent = hx+unicodeToChar(hx);
+            document.getElementById("decimal").textContent = (fractionOfDay*1000000).toFixed(0);
+            document.getElementById("dbox").style="background-color:#"+convertFractionToBase(fractionOfDay, 10, 6)+";";
+            document.getElementById("base64").textContent = convertFractionToBase(fractionOfDay, 64, 3);
+            
+            document.getElementById("dozenal").textContent = convertFractionToBase(fractionOfDay, 12, 5);
+            document.getElementById("base6").textContent = convertFractionToBase(fractionOfDay, 6, 7);
+            document.getElementById("base36").textContent = convertFractionToBase(fractionOfDay, 36, 4);
+            document.getElementById("base60").textContent = convertFractionToBase(fractionOfDay, 60, 3);
+            document.getElementById("base69").textContent = convertFractionToBase(fractionOfDay, 69, 3);
+            const alphas=convertFractionToBase(fractionOfDay, 26, 4);
+            document.getElementById("base26").textContent = alphas;
+            document.getElementById("flagemoji").textContent = textToFlagEmoji(alphas) ;
+            document.getElementById("base44").textContent = convertFractionToBase(fractionOfDay, 44, 4);
+            document.getElementById("cbox").style="background-color:#"+convertFractionToBase(fractionOfDay, 16, 6)+";";
+            document.getElementById("baseP").textContent = convertFractionToBase(fractionOfDay, 118, 3);
+            }   
+
+        // Update every 100 milliseconds
+        setInterval(updateTime, 100);
+        updateTime();
+
+        function generateFractions() {
+            const denominators = [1,2,3,4,5,6,8,9,10,12,15,16,18,20,30,36,60];
+            const fractions = [];
+            for (const denominator of denominators) {
+                for (let numerator = 0; numerator < denominator; numerator++) {
+                    // Check if the fraction is in its simplest form
+                    if (gcd(numerator, denominator) === 1) {
+                        fractions.push({ numerator, denominator });
+                    }
+                }
+            }
+            return fractions;
+        }
+        function gcd(a, b) {
+            while (b !== 0) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        const FRACTIONS = generateFractions();
+        console.log(FRACTIONS);
+
+        const ticksContainer = document.getElementById('fraction-ticks');
+        const labelsContainer = document.getElementById('fraction-labels');
+        const uniLabel=document.getElementById('uniform-labels')
+
+        FRACTIONS.forEach(({ numerator, denominator }) => {
+            const fraction = numerator / denominator;
+            const angle = fraction * 360; // Fraction to angle
+            const outerRadius = 48; // Outer radius for the clock
+            const innerRadius = outerRadius + (48 / denominator)+1; // Shorter lines for larger denominators
+            const r=[10,20];
+            const xy = [Math.sin((angle * Math.PI) / 180),-Math.cos((angle * Math.PI) / 180)]
+            const x1 = xy[0]* innerRadius;
+            const y1 = xy[1]* innerRadius;
+            const x2 = xy[0]* outerRadius;
+            const y2 = xy[1]* outerRadius;
+
+            // Create the tick
+            const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            tick.setAttribute("x1", x1);
+            tick.setAttribute("y1", y1);
+            tick.setAttribute("x2", x2);
+            tick.setAttribute("y2", y2);
+            tick.setAttribute("class", "fraction-tick");
+            ticksContainer.appendChild(tick);
+            if(10%denominator===0){
+                console.log(denominator);
+                console.log(gcd(denominator,10));
+                const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                tick.setAttribute("x1", xy[0]*15);
+                tick.setAttribute("y1", xy[1]*15);
+                tick.setAttribute("x2", xy[0]*12);
+                tick.setAttribute("y2", xy[1]*12);
+                tick.setAttribute("class", "fraction-tick");
+                ticksContainer.appendChild(tick);
+            }
+            if(16%denominator===0){
+                console.log(denominator);
+                console.log(gcd(denominator,10));
+                const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                tick.setAttribute("x1", xy[0]*25);
+                tick.setAttribute("y1", xy[1]*25);
+                tick.setAttribute("x2", xy[0]*30);
+                tick.setAttribute("y2", xy[1]*30);
+                tick.setAttribute("class", "fraction-tick");
+                ticksContainer.appendChild(tick);
+            }
+            if(36%denominator===0){
+                console.log(denominator);
+                console.log(gcd(denominator,10));
+                const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                tick.setAttribute("x1", xy[0]*38);
+                tick.setAttribute("y1", xy[1]*38);
+                tick.setAttribute("x2", xy[0]*40);
+                tick.setAttribute("y2", xy[1]*40);
+                tick.setAttribute("class", "fraction-tick");
+                ticksContainer.appendChild(tick);
+            }
+            if(12%denominator===0){
+                console.log(denominator);
+                console.log(gcd(denominator,10));
+                const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                tick.setAttribute("x1", xy[0]*40);
+                tick.setAttribute("y1", xy[1]*40);
+                tick.setAttribute("x2", xy[0]*48);
+                tick.setAttribute("y2", xy[1]*48);
+                tick.setAttribute("class", "fraction-tick");
+                ticksContainer.appendChild(tick);
+            }
+            if(60%denominator===0){
+                console.log(denominator);
+                console.log(gcd(denominator,10));
+                const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                tick.setAttribute("x1", xy[0]*45);
+                tick.setAttribute("y1", xy[1]*45);
+                tick.setAttribute("x2", xy[0]*48);
+                tick.setAttribute("y2", xy[1]*48);
+                tick.setAttribute("class", "fraction-tick");
+                ticksContainer.appendChild(tick);
+            }
+            
+            // Add the fraction label
+            const labelRadius = innerRadius;
+            const l2 = innerRadius+2; // Position labels outside the ticks
+            const lx = xy[0] * labelRadius;
+            const ly = xy[1] * labelRadius;
+
+            const lx2 = xy[0] * l2;
+            const ly2 = xy[1] * l2;
+
+            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("x", lx);
+            label.setAttribute("y", ly);
+            label.setAttribute("class", "fraction-label");
+            label.textContent = numerator === 0 ? "" : `${numerator}`;
+            labelsContainer.appendChild(label);
+            const label2 = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label2.setAttribute("x", lx2);
+            label2.setAttribute("y", ly2);
+            label2.setAttribute("class", "fraction-label");
+            label2.textContent = numerator === 0 ? "" : `${denominator}`;
+            labelsContainer.appendChild(label2);
+        });
+        function updateClock() {
+            let hands=["","h","h2","d","d2","d3","t","t2","t3","s","s2","s3"];
+            const fractionOfDay = getFractionOfDay();
+            const hand = document.querySelector(".hand");
+            const handd = document.querySelector(".handd");
+            const hande = document.querySelector(".hande");
+            const handh = document.querySelector(".handh");
+            const handi = document.querySelector(".handi");
+            const angle = fractionOfDay * 360; // Full circle represents 1 day
+            document.querySelector(".hand").setAttribute("transform", `rotate(${angle})`);
+            document.querySelector(".handd").setAttribute("transform", `rotate(${10*angle})`);
+            document.querySelector(".handd2").setAttribute("transform", `rotate(${100*angle})`);
+            document.querySelector(".handd3").setAttribute("transform", `rotate(${1000*angle})`);
+            document.querySelector(".handd4").setAttribute("transform", `rotate(${10000*angle})`);
+            document.querySelector(".handh").setAttribute("transform", `rotate(${16*angle})`);
+            document.querySelector(".handh2").setAttribute("transform", `rotate(${256*angle})`);
+            document.querySelector(".handh3").setAttribute("transform", `rotate(${16*256*angle})`);
+            document.querySelector(".hande").setAttribute("transform", `rotate(${60*angle})`);
+            document.querySelector(".hande2").setAttribute("transform", `rotate(${3600*angle})`);
+            document.querySelector(".handx").setAttribute("transform", `rotate(${36*angle})`);
+            document.querySelector(".handx2").setAttribute("transform", `rotate(${36*36*angle})`);
+            
+        }
+        setInterval(updateClock, 1);
+        updateClock();
+
+    </script>
+</body>
+</html>
