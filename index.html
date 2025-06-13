@@ -11,9 +11,10 @@
             font-family: monospace, Arial, sans-serif;
             text-align: left;
             padding: 2px;
+            margin: 0px;
         }
         .time-box {
-            margin: 20px;
+            margin: 0px;
             font-size: 1.5em;
             display: flex;
             align-content: end;
@@ -24,17 +25,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 90vh;
         }
 
         svg {
-            width: 90vmin;
-            height: 90vmin;
+            width: 70vmin;
+            height: 70vmin;
         }
 
         .clock-face {
             fill: #000;
-            stroke: #ffffff;
+            stroke: #fff;
             stroke-width: 1px;
         }
 
@@ -118,42 +119,41 @@
             dominant-baseline: middle;
         }
         .color-box {
-            width: 20px;
-            height: 20px;
-            margin-left: 10px;
+            display: flex;
+            height: 40px;
             border: 1px solid #000; /* Optional border */
+            margin-top: -10px;
         }
+
         .flex-container {
             display: flex;
-            justify-content: left; /* Distributes items to the left and right */
+            justify-content: center; /* Distributes items to the left and right */
             align-items: center; /* Aligns items vertically (optional) */
             padding: 0px;
+        }
+        p{
+            margin: 10px 0px;
         }
     </style>
 </head>
 <body class="flex-container">   
     <div class="time-box">
+        <a href="clr.html" style="color:#0f0; text-decoration: underline; margin-bottom: 10px;">->clr.html</a>
         <div id="isoTime"></div>
         <p><strong>Bin:</strong> <span id="binary"></span><br>
         <strong>Oct:</strong> <span id="octal"></span><br>
         <strong>Base64:</strong> <span id="base64"></span></p>
-        <span class="flex-container">
-            <strong>Hex:</strong> <span id="hexadecimal"></span>
-            <div id="cbox" class="color-box"></div>
-        </span><br>
-        
-        
-        <span class="flex-container">
+        <p><strong>Hex:</strong> <span id="hexadecimal"></span><div id="cbox" class="color-box"></div></p>
         <p><strong>Dec:</strong> <span id="decimal"></span><div id="dbox" class="color-box"></div></p>
-        </span>
-        <p><strong>Base 6:</strong><span id="base6"></span><br>
+        <p><strong>Base 6:</strong> <span id="base6"></span><br>
         <strong>Base36:</strong> <span id="base36"></span><br>
-        <strong>Dozenal:</strong> <span id="dozenal"></span></p>
+        <strong>Base12:</strong> <span id="dozenal"></span></p>
         <p><strong>Base26:</strong> <span id="base26"></span><span id="flagemoji"></span><br>
         <strong>Base44:</strong> <span id="base44"></span><br>
         <strong>Base60:</strong> <span id="base60"></span><br>
         <strong>Base69:</strong> <span id="base69"></span></p>
-        <strong>Base118:</strong> <span id="baseP"></span></p>
+        <p><strong>Base5040:</strong><span id="base5040"></span></p>
+        <p><strong>Base118:</strong> <span id="baseP"></span></p>
     </div>
     <div class="clock-container">
         <svg viewBox="-60 -60 120 120">
@@ -257,7 +257,8 @@
             document.getElementById("base44").textContent = convertFractionToBase(fractionOfDay, 44, 4);
             document.getElementById("cbox").style="background-color:#"+convertFractionToBase(fractionOfDay, 16, 6)+";";
             document.getElementById("baseP").textContent = convertFractionToBase(fractionOfDay, 118, 3);
-            }   
+            document.getElementById("base5040").textContent = convertFractionToBase(fractionOfDay, 5040, 2);
+        }
 
         // Update every 100 milliseconds
         setInterval(updateTime, 100);
