@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">    
+    <title>Day Divided into 256 Parts (00-FF)</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Space Mono", monospace;
+            text-align: center;
+            transition: background-color 0.6s linear;
+            color: white;
+            will-change: background-color;
+        }
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+            font-family: "Space Mono", monospace;
+            background-color: transparent;
+        }
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: center;
+            font-family: "Space Mono", monospace;
+        }
+        th {
+            background-color: rgba(126, 126, 126, 0.3);
+        }
+        tr {
+            background-color: rgba(67, 67, 67, 0.3);
+        }
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h2>24-Hour Day Divided into 256 Parts (00-ff)</h2>
+    <p style="font-style: italic; opacity: 0.8;">This table maps 256 hexadecimal units to their equivalent times in a 24-hour day.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Hex</th>
+                <th>Dec</th>
+                <th>Time</th>
+                
+                <th>% of Day</th>
+                <th>Seconds</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                const totalSeconds = 24 * 60 * 60; // 86400 seconds in a day
+                const parts = 256;
+                const secondsPerPart = totalSeconds / parts; // 337.5 seconds per part
+                
+                for (let i = 0; i < parts; i++) {
+                    const seconds = i * secondsPerPart;
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    const secs = Math.floor(seconds % 60);
+                    
+                    const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}${(seconds % 1 >= 0.5) ? ".5" : ".0"}`;
+                    const decimalFraction = (100 * i / parts).toFixed(6);
+                    
+                    document.write(`
+                        <tr>
+                            <td>${i.toString(16).padStart(2, '0')}</td>
+                            <td>${i}</td>
+                            <td>${timeStr}</td>
+                            <td>${decimalFraction}</td>
+                            <td>${Math.floor(seconds)}${(seconds % 1 >= 0.5) ? ".5" : ".0"}</td>
+                        </tr>
+                    `);
+                    
+                
+                }
+            function dayFrac() {
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const elapsedMilliseconds = now - startOfDay;
+    const totalMilliseconds = 24 * 60 * 60 * 1000;
+    return elapsedMilliseconds / totalMilliseconds;
+}
+function frac2base(fraction, base, precision = 6) {
+    const digits = "0123456789abcdef";
+    let result = "";
+    let fractionalPart = fraction;
+
+    for (let i = 0; i < precision; i++) {
+        fractionalPart *= base;
+        const digit = Math.floor(fractionalPart);
+        if (base >50&&base!=64) {
+            result += digit.toString().padStart(2, '0') + (i < precision - 1 ? ":" : "");
+        } else {result += digits[digit];}
+        fractionalPart -= digit;
+    }
+    return result; 
+}
+function updateHexColorBackground() {
+    const a = frac2base(dayFrac(), 16);
+    const hexColor = "#" + a;
+    document.body.style.backgroundColor = hexColor;
+}
+
+const interv = 86400 / 256 / 256 * 1000;
+// Update every 100ms
+setInterval(updateHexColorBackground, 300);
+            </script>
+        </tbody>
+    </table>
+</body>
+</html>
